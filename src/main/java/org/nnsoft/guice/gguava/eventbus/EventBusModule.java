@@ -16,7 +16,7 @@ package org.nnsoft.guice.gguava.eventbus;
  *    limitations under the License.
  */
 
-import static com.google.inject.internal.util.$Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.inject.matcher.Matchers.any;
 
 import static com.google.inject.name.Names.named;
