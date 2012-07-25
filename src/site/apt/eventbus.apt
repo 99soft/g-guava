@@ -63,7 +63,7 @@ public final class DefaultApplicationEventHandler
     @com.google.common.eventbus.Subscribe
     public void when( ApplicationEvent applicationEvent )
     {
-        eventNotified = true;
+        // do something you need
     }
 
 }
