@@ -16,7 +16,7 @@
     <script type="text/javascript" src="./js/apache-maven-fluido.min.js"></script>
 
     
-      <meta name="author" content="The 99 Software Foundation" />
+      <meta name="author" content="EventBus" />
     <meta name="Date-Revision-yyyymmdd" content="20120725" />
     <meta http-equiv="Content-Language" content="en" />
             </head>
@@ -68,11 +68,11 @@
                                     <h3>99soft :: G-Guava</h3>
                   <ul>
                   <li class="none">
-            <strong>Home</strong>
-          </li>
-                  <li class="none">
-                          <a href="eventbus.html" title="EventBus Module">EventBus Module</a>
+                          <a href="index.html" title="Home">Home</a>
             </li>
+                  <li class="none">
+            <strong>EventBus Module</strong>
+          </li>
           </ul>
                         <h3>External Links</h3>
                   <ul>
@@ -134,15 +134,60 @@
         
         <div id="bodyColumn"  class="span10" >
                                   
-            <!--  --><!-- Copyright 2012 The 99 Software Foundation --><!--  --><!-- Licensed under the Apache License, Version 2.0 (the "License"); --><!-- you may not use this file except in compliance with the License. --><!-- You may obtain a copy of the License at --><!--  --><!-- http://www.apache.org/licenses/LICENSE-2.0 --><!--  --><!-- Unless required by applicable law or agreed to in writing, software --><!-- distributed under the License is distributed on an "AS IS" BASIS, --><!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. --><!-- See the License for the specific language governing permissions and --><!-- limitations under the License. --><!--  --><div class="section"><h2>Welcome to G-Guava!<a name="Welcome_to_G-Guava"></a></h2><p>G-Guava is a small collection of reusable tools for <i>Google Guice</i> to make easier the integration with <a href="#Google_Guava">http://code.google.com/p/guava-libraries/</a>.</p></div><div class="section"><h2>Before starting<a name="Before_starting"></a></h2><p>G-Guava is available on the Maven Central repo, you just need to add the dependency below in your <tt>pom.xml</tt> file:</p><div class="source"><pre class="prettyprint">&lt;dependencies&gt;
-  ...
-  &lt;dependency&gt;
-    &lt;groupId&gt;org.99soft.guice&lt;/groupId&gt;
-    &lt;artifactId&gt;g-guava&lt;/artifactId&gt;
-    &lt;version&gt;0.1&lt;/version&gt;
-  &lt;/dependency&gt;
-  ...
-&lt;/dependencies&gt;</pre></div></div><div class="section"><h2>Acknowledgements<a name="Acknowledgements"></a></h2><p>This work is dedicated to our city, L'Aquila, destroyed by a terrible earthquake the 6th April, 2009... That day more than 300 people were killed because buildings collapsed after a magnitudo 6.3 earthquake at 3:32 am.</p><p>We'll never forget that episode.</p></div>
+            <!--  --><!-- Copyright 2012 The 99 Software Foundation --><!--  --><!-- Licensed under the Apache License, Version 2.0 (the "License"); --><!-- you may not use this file except in compliance with the License. --><!-- You may obtain a copy of the License at --><!--  --><!-- http://www.apache.org/licenses/LICENSE-2.0 --><!--  --><!-- Unless required by applicable law or agreed to in writing, software --><!-- distributed under the License is distributed on an "AS IS" BASIS, --><!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. --><!-- See the License for the specific language governing permissions and --><!-- limitations under the License. --><!--  --><div class="section"><h2>EventBus<a name="EventBus"></a></h2><p>The <i>EventBus</i> module was originally developed by <a class="externalLink" href="http://spin.atomicobject.com/author/dewind/">Justin DeWind</a> on <a class="externalLink" href="http://spin.atomicobject.com/2012/01/13/the-guava-eventbus-on-guice/">Atomicobject</a> blog, under the terms of the <a class="externalLink" href="http://opensource.org/comment/935">MIT License</a>.</p><p>This variation allows configuring more than one <tt>EventBus</tt> for each Injector; let's define first an event:</p><div class="source"><pre class="prettyprint">public final class ApplicationEvent
+{
+
+}</pre></div><p>And an event handler</p><div class="source"><pre class="prettyprint">public interface ApplicationEventHandler
+{
+
+    void when( ApplicationEvent applicationEvent );
+
+}</pre></div><p>with related implementation</p><div class="source"><pre class="prettyprint">public final class DefaultApplicationEventHandler
+    implements ApplicationEventHandler
+{
+
+    @javax.inject.Inject
+    private Dependency myDependency;
+
+    // setters omitted for brevity
+
+    @Override
+    @com.google.common.eventbus.Subscribe
+    public void when( ApplicationEvent applicationEvent )
+    {
+        // do something you need
+    }
+
+}</pre></div><p>then you can create the Injector</p><div class="source"><pre class="prettyprint">public final class MySystem
+{
+
+    @javax.inject.Inject
+    @javax.inject.Named( &quot;eventbus.test&quot; )
+    private EventBus eventBus;
+
+    // setters omitted for brevity
+
+    public void start()
+    {
+        com.google.inject.Guice.createInjector(  new EventBusModule()
+        {
+
+            @Override
+            protected void configure()
+            {
+                bind( ApplicationEventHandler.class ).to( DefaultApplicationEventHandler.class );
+                bindBus( &quot;eventbus.test&quot; ).toAnyBoundClass();
+            }
+    
+        } ).injectMembers( this );
+    }
+
+    public void notify()
+    {
+        eventBus.post( new ApplicationEvent() );
+    }
+
+}</pre></div><p>That's all, have fun!</p></div>
                   </div>
             </div>
       
