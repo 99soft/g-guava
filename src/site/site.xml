@@ -29,7 +29,7 @@
   <body>
     <menu name="${project.name}">
       <item name="Home" href="index.html" />
-      <item name="Load Modules" href="eventbus.html" />
+      <item name="EventBus Module" href="eventbus.html" />
     </menu>
 
     <menu name="External Links">
