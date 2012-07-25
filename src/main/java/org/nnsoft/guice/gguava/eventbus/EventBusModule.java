@@ -32,7 +32,7 @@ import com.google.inject.spi.TypeListener;
 /**
  * This class was originally developed by <a href="http://spin.atomicobject.com/author/dewind/">Justin DeWind</a>
  * on <a href="http://spin.atomicobject.com/2012/01/13/the-guava-eventbus-on-guice/">Atomicobject</a> blog, under the
- * therms of the MIT License.
+ * terms of the MIT License.
  */
 public abstract class EventBusModule
     extends AbstractModule
