@@ -34,6 +34,7 @@
 
     <menu name="External Links">
       <item name="Project Page" href="https://github.com/99soft/g-guava" />
+      <item name="Google Guice" href="http://code.google.com/p/guava-libraries/" />
       <item name="Google Guice" href="http://code.google.com/p/google-guice/" />
     </menu>
   </body>
