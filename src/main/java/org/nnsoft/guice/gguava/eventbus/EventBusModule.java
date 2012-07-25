@@ -34,48 +34,46 @@ import com.google.inject.spi.TypeListener;
  * on <a href="http://spin.atomicobject.com/2012/01/13/the-guava-eventbus-on-guice/">Atomicobject</a> blog, under the
  * therms of the MIT License.
  */
-public final class EventBusModule
+public abstract class EventBusModule
     extends AbstractModule
 {
 
-    private final String identifier;
-
-    private final Matcher<Object> matcher;
-
-    public EventBusModule( String identifier )
-    {
-        this( identifier, any() );
-    }
-
-    public EventBusModule( String identifier, Matcher<Object> matcher )
+    protected BusMatcher bindBus( final String identifier )
     {
         checkArgument( identifier != null, "Event bus identifier must be not null" );
-        checkArgument( matcher != null, "Event bus matcher must be not null" );
 
-        this.identifier = identifier;
-        this.matcher = matcher;
-    }
-
-    @Override
-    protected void configure()
-    {
-        final EventBus eventBus = new EventBus( identifier );
-
-        bind( EventBus.class ).annotatedWith( named( identifier ) ).toInstance( eventBus );
-
-        bindListener( matcher, new TypeListener()
+        return new BusMatcher()
         {
-            public <I> void hear( TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter )
+
+            public void toAnyBoundClass()
             {
-                typeEncounter.register( new InjectionListener<I>()
+                to( any() );
+            }
+
+            public void to( Matcher<Object> matcher )
+            {
+                checkArgument( matcher != null, "Event bus matcher must be not null" );
+
+                final EventBus eventBus = new EventBus( identifier );
+
+                bind( EventBus.class ).annotatedWith( named( identifier ) ).toInstance( eventBus );
+
+                bindListener( matcher, new TypeListener()
                 {
-                    public void afterInjection( I injectee )
+                    public <I> void hear( TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter )
                     {
-                        eventBus.register( injectee );
+                        typeEncounter.register( new InjectionListener<I>()
+                        {
+                            public void afterInjection( I injectee )
+                            {
+                                eventBus.register( injectee );
+                            }
+                        } );
                     }
                 } );
             }
-        } );
+
+        };
     }
 
 }

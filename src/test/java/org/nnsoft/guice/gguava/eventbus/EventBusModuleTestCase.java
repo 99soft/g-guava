@@ -53,7 +53,16 @@ public final class EventBusModuleTestCase
     @Before
     public void setUp()
     {
-        createInjector( new EventBusModule( "eventbus.test" ) ).injectMembers( this );
+        createInjector(  new EventBusModule()
+        {
+
+            @Override
+            protected void configure()
+            {
+                bindBus( "eventbus.test" ).toAnyBoundClass();
+            }
+
+        } ).injectMembers( this );
     }
 
     @After
